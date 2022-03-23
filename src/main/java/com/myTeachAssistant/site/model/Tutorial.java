@@ -1,5 +1,5 @@
 package com.myTeachAssistant.site.model;
 
-public class Cours {
+public class Tutorial {
 
 }
