@@ -22,6 +22,7 @@ import com.myTeachAssistant.site.model.Tutorial;
 import com.myTeachAssistant.site.repository.TutorialRepository;
 
 @CrossOrigin(origins = "*")
+// Initialy on localhost8081 but this causes problems with cors policy for the moment 
 @RestController
 @RequestMapping("/api")
 public class TutorialController {
