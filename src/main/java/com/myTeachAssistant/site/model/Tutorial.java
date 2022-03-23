@@ -23,15 +23,19 @@ public class Tutorial {
 	@Column(name = "published")
 	private Boolean published;
 
+	@Column(name = "favorite")
+	private Boolean favorite;
+
 	// Empty Constructor
 	public Tutorial() {
 	}
 
 	// Args Constructor
-	public Tutorial(String title, String description, Boolean published) {
+	public Tutorial(String title, String description, Boolean published, Boolean favorite) {
 		this.title = title;
 		this.description = description;
 		this.published = published;
+		this.favorite = favorite;
 	}
 
 	// Getter && Setter
@@ -71,10 +75,22 @@ public class Tutorial {
 		return published;
 	}
 
+	public Boolean getFavorite() {
+		return favorite;
+	}
+
+	public void setFavorite(Boolean favorite) {
+		this.favorite = favorite;
+	}
+
+	public boolean isFavorite() {
+		return favorite;
+	}
+
 	// To-String for debugging
 	@Override
 	public String toString() {
 		return "Tutorial [id=" + id + ", title=" + title + ", description=" + description + ", published=" + published
-				+ "]";
+				+ ", favorite=" + favorite + "]";
 	}
 }

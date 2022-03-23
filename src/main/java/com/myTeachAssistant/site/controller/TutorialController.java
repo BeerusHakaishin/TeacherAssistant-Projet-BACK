@@ -65,7 +65,7 @@ public class TutorialController {
 			Tutorial _tutorial = tutorialRepository
 					// false because boolean published and when create a new article isn't published
 					// by default
-					.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), false));
+					.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), false, false));
 			return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -81,6 +81,7 @@ public class TutorialController {
 			_tutorial.setTitle(tutorial.getTitle());
 			_tutorial.setDescription(tutorial.getDescription());
 			_tutorial.setPublished(tutorial.isPublished());
+			_tutorial.setFavorite(tutorial.isFavorite());
 			return new ResponseEntity<>(tutorialRepository.save(_tutorial), HttpStatus.OK);
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
