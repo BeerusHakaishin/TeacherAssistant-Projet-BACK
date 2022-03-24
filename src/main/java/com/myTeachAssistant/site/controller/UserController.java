@@ -1,5 +1,6 @@
 package com.myTeachAssistant.site.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,12 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.myTeachAssistant.site.exception.UserNotFoundException;
 import com.myTeachAssistant.site.model.Tutorial;
 import com.myTeachAssistant.site.model.User;
+import com.myTeachAssistant.site.repository.TutorialRepository;
 import com.myTeachAssistant.site.repository.UserRepository;
 
 @RestController
@@ -22,6 +27,9 @@ import com.myTeachAssistant.site.repository.UserRepository;
 public class UserController {
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	TutorialRepository tutorialRepository;
 
 	@GetMapping("/users")
 	public List<User> getAll() {
@@ -47,6 +55,25 @@ public class UserController {
 			throw new UserNotFoundException("id: " + id);
 		}
 		return userOptional.get().getTutorial();
+	}
+
+	// Create a post for the specific user
+	@PostMapping("/users/{id}/tutorials")
+	public ResponseEntity<Object> createUser(@PathVariable long id, @RequestBody Tutorial tutorial) {
+		Optional<User> userOptional = userRepository.findById(id);
+		if (!userOptional.isPresent()) {
+			throw new UserNotFoundException("id: " + id);
+		}
+		User user = userOptional.get();
+		// map the user to the post
+		tutorial.setUser(user);
+		// save post to the database
+		tutorialRepository.save(tutorial);
+		// getting the path of the post and append id of the post to the URI
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(tutorial.getId())
+				.toUri();
+		// returns the location of the created post
+		return ResponseEntity.created(location).build();
 	}
 
 	@DeleteMapping("/{id}")
