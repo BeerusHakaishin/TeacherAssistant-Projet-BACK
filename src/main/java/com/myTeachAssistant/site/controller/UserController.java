@@ -39,6 +39,7 @@ public class UserController {
 		}
 	}
 
+	// Get all tutorials of an user
 	@GetMapping("/users/{id}/tutorials")
 	public List<Tutorial> retriveAllUsersTutos(@PathVariable long id) {
 		Optional<User> userOptional = userRepository.findById(id);
