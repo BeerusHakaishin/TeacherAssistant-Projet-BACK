@@ -94,7 +94,7 @@ Ouvrez un terminal à l'endroit où vous désirez installer le projet puis suive
    ```sh
    Dans la liste de l'aperçu du projet:
    
-   - Choisissez le dossier du projet de l'application (P3-clutchrayn-back-javangular-2021).
+   - Choisissez le dossier du projet de l'application (site).
    - Faites un clic droit dessus pour ouvrir le menu contextuel.
    - Choisissez "Run as -> Spring Boot App".
    ```
