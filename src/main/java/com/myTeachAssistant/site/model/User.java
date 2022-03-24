@@ -1,6 +1,8 @@
 package com.myTeachAssistant.site.model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -11,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
@@ -48,6 +51,9 @@ public class User {
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "idUser"), inverseJoinColumns = @JoinColumn(name = "idRole"))
 	@NotNull
 	private Set<Role> roles = new HashSet<>();
+
+	@OneToMany
+	private List<Tutorial> tutorial = new ArrayList<>();
 
 	// Getter && Setter
 	public Long getId() {
@@ -88,5 +94,13 @@ public class User {
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public List<Tutorial> getTutorial() {
+		return tutorial;
+	}
+
+	public void setTutorial(List<Tutorial> tutorial) {
+		this.tutorial = tutorial;
 	}
 }
