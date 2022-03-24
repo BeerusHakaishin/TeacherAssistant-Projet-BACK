@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myTeachAssistant.site.dto.TutorialDto;
 import com.myTeachAssistant.site.model.Tutorial;
 import com.myTeachAssistant.site.repository.TutorialRepository;
+import com.myTeachAssistant.site.service.TutorialService;
 
 @CrossOrigin(origins = "*")
 // Initialy on localhost8081 but this causes problems with cors policy for the moment 
@@ -28,6 +32,8 @@ import com.myTeachAssistant.site.repository.TutorialRepository;
 public class TutorialController {
 	@Autowired
 	TutorialRepository tutorialRepository;
+	@Autowired
+	TutorialService tutorialService;
 
 	// Get all the tutorials
 	@GetMapping("/tutorials")
@@ -60,16 +66,10 @@ public class TutorialController {
 
 	// Create one tutorial
 	@PostMapping("/tutorials")
-	public ResponseEntity<Tutorial> createTutorial(@RequestBody Tutorial tutorial) {
-		try {
-			Tutorial _tutorial = tutorialRepository
-					// false because boolean published and when create a new article isn't published
-					// by default
-					.save(new Tutorial(tutorial.getTitle(), tutorial.getDescription(), false, false));
-			return new ResponseEntity<>(_tutorial, HttpStatus.CREATED);
-		} catch (Exception e) {
-			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public ResponseEntity<Tutorial> createTutorial(@Valid @RequestBody TutorialDto tutorialDto) {
+		tutorialService.create(tutorialDto);
+
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	// Update one tutorial
