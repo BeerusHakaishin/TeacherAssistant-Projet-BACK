@@ -52,7 +52,7 @@ public class User {
 	@NotNull
 	private Set<Role> roles = new HashSet<>();
 
-	@OneToMany
+	@OneToMany(mappedBy = "user")
 	private List<Tutorial> tutorial = new ArrayList<>();
 
 	// Getter && Setter
@@ -102,5 +102,12 @@ public class User {
 
 	public void setTutorial(List<Tutorial> tutorial) {
 		this.tutorial = tutorial;
+	}
+
+	// To String
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", roles="
+				+ roles + ", tutorial=" + tutorial + "]";
 	}
 }

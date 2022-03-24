@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myTeachAssistant.site.exception.UserNotFoundException;
+import com.myTeachAssistant.site.model.Tutorial;
 import com.myTeachAssistant.site.model.User;
 import com.myTeachAssistant.site.repository.UserRepository;
 
@@ -35,6 +37,15 @@ public class UserController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
+	}
+
+	@GetMapping("/users/{id}/tutorials")
+	public List<Tutorial> retriveAllUsersTutos(@PathVariable long id) {
+		Optional<User> userOptional = userRepository.findById(id);
+		if (!userOptional.isPresent()) {
+			throw new UserNotFoundException("id: " + id);
+		}
+		return userOptional.get().getTutorial();
 	}
 
 	@DeleteMapping("/{id}")
