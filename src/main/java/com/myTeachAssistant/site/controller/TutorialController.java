@@ -66,10 +66,8 @@ public class TutorialController {
 
 	// Create one tutorial
 	@PostMapping("/tutorials")
-	public ResponseEntity<Tutorial> createTutorial(@Valid @RequestBody TutorialDto tutorialDto) {
-		tutorialService.create(tutorialDto);
-
-		return new ResponseEntity<>(HttpStatus.CREATED);
+	public Tutorial createTutorial(@Valid @RequestBody TutorialDto tutorialDto) {
+		return tutorialService.create(tutorialDto);
 	}
 
 	// Update one tutorial

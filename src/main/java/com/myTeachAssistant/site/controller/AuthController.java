@@ -96,5 +96,4 @@ public class AuthController {
 	public boolean isTokenExpired() {
 		return true;
 	}
-
 }

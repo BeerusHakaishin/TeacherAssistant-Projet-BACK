@@ -1,14 +1,16 @@
 package com.myTeachAssistant.site.service;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.myTeachAssistant.site.model.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.myTeachAssistant.site.model.User;
 
 public class UserDetailsImpl implements UserDetails {
@@ -16,27 +18,25 @@ public class UserDetailsImpl implements UserDetails {
 	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String username;
+	@JsonIgnore
 	private String password;
 	private String email;
+	private Collection<? extends GrantedAuthority> authorities;
 
-	private Set<? extends GrantedAuthority> grantedAuthority;
+	public UserDetailsImpl(Long id, String username, String password,
+			Collection<? extends GrantedAuthority> authorities) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
+		this.authorities = authorities;
+	}
 
 	public static UserDetailsImpl build(User user) {
 
-		UserDetailsImpl userDetailsImpl = new UserDetailsImpl();
-		userDetailsImpl.setId(user.getId());
-		userDetailsImpl.setUsername(user.getUsername());
-		userDetailsImpl.setPassword(user.getPassword());
-		userDetailsImpl.setEmail(user.getEmail());
+		List<GrantedAuthority> authorities = user.getRoles().stream()
+				.map(role -> new SimpleGrantedAuthority(role.getName().name())).collect(Collectors.toList());
 
-		Set<SimpleGrantedAuthority> authoritys = new HashSet<SimpleGrantedAuthority>();
-
-		for (Role role : user.getRoles()) {
-			authoritys.add(new SimpleGrantedAuthority(role.getName().name()));
-		}
-
-		userDetailsImpl.setGrantedAuthority(authoritys);
-		return userDetailsImpl;
+		return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), authorities);
 	}
 
 	// Getter && Setter
@@ -72,42 +72,48 @@ public class UserDetailsImpl implements UserDetails {
 		this.email = email;
 	}
 
-	public Set<? extends GrantedAuthority> getGrantedAuthority() {
-		return grantedAuthority;
+	public Collection<? extends GrantedAuthority> getGrantedAuthority() {
+		return authorities;
 	}
 
-	public void setGrantedAuthority(Set<? extends GrantedAuthority> grantedAuthority) {
-		this.grantedAuthority = grantedAuthority;
+	public void setGrantedAuthority(Set<? extends GrantedAuthority> authorities) {
+		this.authorities = authorities;
 	}
 
 	// Implemented methods from userDetails interface
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		return this.grantedAuthority;
+		return authorities;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
 		return true;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		UserDetailsImpl user = (UserDetailsImpl) o;
+		return Objects.equals(id, user.id);
 	}
 }

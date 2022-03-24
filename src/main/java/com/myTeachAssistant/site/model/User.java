@@ -27,20 +27,11 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank(message = "Le nom d'utilisateur est obligatoire")
-	@Size(max = 50)
-	@NotNull
 	private String username;
 
-	@NotBlank(message = "Le mail est obligatoire")
-	@Size(max = 100)
 	@Email
-	@NotNull
 	private String email;
 
-	@NotBlank(message = "Le mot de passe est obligatoire")
-	@Size(max = 120)
-	@NotNull
 	@JsonIgnore
 	private String password;
 
@@ -48,6 +39,18 @@ public class User {
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "idUser"), inverseJoinColumns = @JoinColumn(name = "idRole"))
 	@NotNull
 	private Set<Role> roles = new HashSet<>();
+
+	// Empty Constructor
+	public User() {
+
+	}
+
+	// Args Constructor
+	public User(@NotBlank @Size(max = 50) @Email String username, @NotBlank @Size(max = 120) String password) {
+		super();
+		this.username = username;
+		this.password = password;
+	}
 
 	// Getter && Setter
 	public Long getId() {

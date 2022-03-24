@@ -1,6 +1,5 @@
 package com.myTeachAssistant.site.model;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -10,9 +9,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Role {
@@ -24,10 +20,6 @@ public class Role {
 	@Enumerated(EnumType.STRING)
 	@Column(length = 15)
 	private ERole name;
-
-	@ManyToMany(mappedBy = "roles")
-	@JsonIgnore
-	private Set<User> users = new HashSet<>();
 
 	// Empty constructor
 	public Role() {

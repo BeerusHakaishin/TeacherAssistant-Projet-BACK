@@ -1,6 +1,7 @@
 package com.myTeachAssistant.site.jwt;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,11 +13,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.myTeachAssistant.site.service.UserDetailsImpl;
+import com.myTeachAssistant.site.model.Blacklist;
+import com.myTeachAssistant.site.repository.BlacklistRepository;
 import com.myTeachAssistant.site.service.UserDetailsServiceImpl;
 
 public class AuthTokenFilter extends OncePerRequestFilter {
@@ -24,7 +27,10 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	private JwtUtils jwtUtils;
 
 	@Autowired
-	private UserDetailsServiceImpl userDetailsService;
+	BlacklistRepository blacklistRepository;
+
+	@Autowired
+	UserDetailsServiceImpl userDetailsService;
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
@@ -34,29 +40,34 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 		try {
 			String jwt = parseJwt(request);
 			if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-				String username = jwtUtils.getUserNameFromJwtToken(jwt);
+				Optional<Blacklist> optBlackList = blacklistRepository.findByToken(jwt);
+				if (!optBlackList.isPresent()) {
+					String username = jwtUtils.getUserNameFromJwtToken(jwt);
 
-				UserDetailsImpl userDetails = (UserDetailsImpl) userDetailsService.loadUserByUsername(username);
-				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-						userDetails, null, userDetails.getAuthorities());
-				authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+					UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+					UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+							userDetails, null, userDetails.getAuthorities());
+					authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-				SecurityContextHolder.getContext().setAuthentication(authentication);
+					SecurityContextHolder.getContext().setAuthentication(authentication);
+				} else {
+					logger.error("This token is blacklisted");
+				}
+
 			}
 		} catch (Exception e) {
-			logger.error("Impossible de gérer l'authentification utilisateur: {}", e);
+			logger.error("Cannot set user authentication: {}", e);
 		}
 
 		filterChain.doFilter(request, response);
 	}
 
-	private String parseJwt(HttpServletRequest request) {
+	public String parseJwt(HttpServletRequest request) {
 		String headerAuth = request.getHeader("Authorization");
 
 		if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
 			return headerAuth.substring(7, headerAuth.length());
 		}
-
 		return null;
 	}
 }

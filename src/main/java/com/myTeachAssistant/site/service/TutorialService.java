@@ -21,7 +21,7 @@ public class TutorialService {
 	@Autowired
 	TutorialRepository tutorialRepository;
 
-	public void create(TutorialDto tutorialDto) {
+	public Tutorial create(TutorialDto tutorialDto) {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		UserDetailsImpl userDetailsImpl = (UserDetailsImpl) authentication.getPrincipal();
@@ -31,10 +31,11 @@ public class TutorialService {
 		Tutorial tutorial = new Tutorial();
 		tutorial.setTitle(tutorialDto.getTitle());
 		tutorial.setDescription(tutorialDto.getDescription());
-		tutorial.setPublished(tutorial.isPublished());
-		tutorial.setFavorite(tutorial.isFavorite());
+		tutorial.setPublished(tutorialDto.getPublished());
+		tutorial.setFavorite(tutorialDto.getFavorite());
 		tutorial.setUser(user);
-		tutorialRepository.save(tutorial);
+
+		return tutorialRepository.save(tutorial);
 	}
 
 	public Optional<Tutorial> read(Long id) {

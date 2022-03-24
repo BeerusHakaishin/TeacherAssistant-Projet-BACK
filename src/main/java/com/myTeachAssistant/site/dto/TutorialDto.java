@@ -1,23 +1,16 @@
 package com.myTeachAssistant.site.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class TutorialDto {
-	@NotBlank
-	@NotNull
-	@Size(max = 100)
+	@Size(min = 5)
 	private String title;
 
-	@NotBlank
-	@NotNull
+	@Size(min = 5)
 	private String description;
 
-	@NotNull
 	private Boolean published;
 
-	@NotNull
 	private Boolean favorite;
 
 	// Getter && Setter
@@ -51,5 +44,13 @@ public class TutorialDto {
 
 	public void setFavorite(Boolean favorite) {
 		this.favorite = favorite;
+	}
+
+	public boolean isFavorite() {
+		return favorite;
+	}
+
+	public boolean isPublished() {
+		return published;
 	}
 }

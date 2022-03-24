@@ -1,5 +1,7 @@
 package com.myTeachAssistant.site.service;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -15,10 +17,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	UserRepository usersRepository;
 
 	@Override
+	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
 		User user = usersRepository.findByUsername(username)
-				.orElseThrow(() -> new UsernameNotFoundException("L'utilisateur n'existe pas en BDD"));
+				.orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
 		return UserDetailsImpl.build(user);
 	}
