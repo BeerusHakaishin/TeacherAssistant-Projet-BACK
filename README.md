@@ -82,7 +82,7 @@ Ouvrez un terminal à l'endroit où vous désirez installer le projet puis suive
 
 1. Cloner le projet
    ```sh
-   git clone git@github.com:WildCodeSchool/P3-clutchrayn-back-javangular-2021.git
+   git clone git@github.com:BeerusHakaishin/TeacherAssistant-Projet-BACK.git
    ```
 2. Dans le projet, Entrer les clés nécessaires dans `application.properties` <br> *(utilisez le user ___postgres___ sur PGAdmin ou créez en un)*
    ```js
