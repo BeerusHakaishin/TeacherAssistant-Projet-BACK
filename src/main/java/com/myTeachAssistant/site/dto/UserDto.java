@@ -1,9 +1,8 @@
-package com.myTeachAssistant.site.model;
+package com.myTeachAssistant.site.dto;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,36 +10,22 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.myTeachAssistant.site.model.Role;
 
-@Entity
-@Table(uniqueConstraints = { @UniqueConstraint(columnNames = "username"), @UniqueConstraint(columnNames = "email") })
-public class User {
+public class UserDto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@NotBlank(message = "Le nom d'utilisateur est obligatoire")
-	@Size(max = 50)
-	@NotNull
 	private String username;
 
-	@NotBlank(message = "Le mail est obligatoire")
-	@Size(max = 100)
 	@Email
-	@NotNull
 	private String email;
 
-	@NotBlank(message = "Le mot de passe est obligatoire")
-	@Size(max = 120)
-	@NotNull
 	@JsonIgnore
 	private String password;
 
@@ -90,10 +75,4 @@ public class User {
 		this.roles = roles;
 	}
 
-	// To string
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", roles="
-				+ roles + "]";
-	}
 }
