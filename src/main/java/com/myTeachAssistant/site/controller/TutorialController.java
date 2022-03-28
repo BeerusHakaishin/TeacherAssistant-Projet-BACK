@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.myTeachAssistant.site.exception.TutorialNotFoundException;
+import com.myTeachAssistant.site.model.Comment;
 import com.myTeachAssistant.site.model.Tutorial;
 import com.myTeachAssistant.site.repository.TutorialRepository;
 
@@ -84,6 +86,16 @@ public class TutorialController {
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+	}
+
+	// Retrieve all comment off a tutorial
+	@GetMapping("/tutorials/{id}/comments")
+	public List<Comment> findBySpecificRole(@PathVariable long id) {
+		Optional<Tutorial> tutoOptional = tutorialRepository.findById(id);
+		if (!tutoOptional.isPresent()) {
+			throw new TutorialNotFoundException("id: " + id);
+		}
+		return tutoOptional.get().getComment();
 	}
 
 	// Create one tutorial

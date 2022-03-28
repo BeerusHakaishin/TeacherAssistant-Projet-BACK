@@ -1,5 +1,8 @@
 package com.myTeachAssistant.site.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Entity
 @Table(name = "tutorials")
 public class Tutorial {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -34,6 +39,9 @@ public class Tutorial {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JsonIgnore
 	private User user;
+
+	@OneToMany(mappedBy = "tutorial")
+	private List<Comment> comment = new ArrayList<>();
 
 	// Empty Constructor
 	public Tutorial() {
@@ -104,11 +112,14 @@ public class Tutorial {
 		this.user = user;
 	}
 
-	// To - String
-	@Override
-	public String toString() {
-		return "Tutorial [id=" + id + ", title=" + title + ", description=" + description + ", published=" + published
-				+ ", favorite=" + favorite + ", user=" + user + "]";
+	public List<Comment> getComment() {
+		return comment;
 	}
+
+	public void setComment(List<Comment> comment) {
+		this.comment = comment;
+	}
+
+	// To - String
 
 }

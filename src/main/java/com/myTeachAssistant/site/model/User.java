@@ -55,6 +55,9 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<Tutorial> tutorial = new ArrayList<>();
 
+	@OneToMany(mappedBy = "user")
+	private List<Comment> comment = new ArrayList<>();
+
 	// Getter && Setter
 	public Long getId() {
 		return id;
@@ -104,10 +107,18 @@ public class User {
 		this.tutorial = tutorial;
 	}
 
+	public List<Comment> getComment() {
+		return comment;
+	}
+
+	public void setComment(List<Comment> comment) {
+		this.comment = comment;
+	}
+
 	// To String
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", roles="
-				+ roles + ", tutorial=" + tutorial + "]";
+				+ roles + ", tutorial=" + tutorial + ", comment=" + comment + "]";
 	}
 }
