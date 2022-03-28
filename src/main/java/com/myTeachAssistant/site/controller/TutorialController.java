@@ -90,7 +90,7 @@ public class TutorialController {
 
 	// Retrieve all comments off a tutorial
 	@GetMapping("/tutorials/{id}/comments")
-	public List<Comment> findBySpecificRole(@PathVariable long id) {
+	public List<Comment> findAllCommentsOnTutorial(@PathVariable long id) {
 		Optional<Tutorial> tutoOptional = tutorialRepository.findById(id);
 		if (!tutoOptional.isPresent()) {
 			throw new TutorialNotFoundException("id: " + id);
