@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +29,7 @@ import com.myTeachAssistant.site.repository.UserRepository;
 @RequestMapping("/api")
 public class UserController {
 	@Autowired
-	UserRepository<?> userRepository;
+	UserRepository userRepository;
 
 	@Autowired
 	TutorialRepository tutorialRepository;
@@ -83,15 +81,6 @@ public class UserController {
 		return userOptional.get().getComment();
 	}
 
-	// Create an user
-	@PostMapping("/users")
-	public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
-		User sevedUser = userRepository.save(user);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(sevedUser.getId())
-				.toUri();
-		return ResponseEntity.created(location).build();
-	}
-
 	// Create a post for the specific user
 	@PostMapping("/users/{id}/tutorials")
 	public ResponseEntity<Object> createUser(@PathVariable long id, @RequestBody Tutorial tutorial) {
@@ -111,6 +100,7 @@ public class UserController {
 		return ResponseEntity.created(location).build();
 	}
 
+	// Delete an user
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteUser(@PathVariable(required = true) Long id) {
 		if (userRepository.findById(id).isEmpty())
