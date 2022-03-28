@@ -83,8 +83,7 @@ public class UserController {
 		return userOptional.get().getComment();
 	}
 
-	// method that posts a new user detail and returns the status of the user
-	// resource
+	// Create an user
 	@PostMapping("/users")
 	public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
 		User sevedUser = userRepository.save(user);
