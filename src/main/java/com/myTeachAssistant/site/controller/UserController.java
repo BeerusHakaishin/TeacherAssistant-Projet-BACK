@@ -3,6 +3,7 @@ package com.myTeachAssistant.site.controller;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.myTeachAssistant.site.exception.UserNotFoundException;
+import com.myTeachAssistant.site.model.Role;
 import com.myTeachAssistant.site.model.Tutorial;
 import com.myTeachAssistant.site.model.User;
 import com.myTeachAssistant.site.repository.TutorialRepository;
@@ -26,7 +28,7 @@ import com.myTeachAssistant.site.repository.UserRepository;
 @RequestMapping("/api")
 public class UserController {
 	@Autowired
-	UserRepository userRepository;
+	UserRepository<?> userRepository;
 
 	@Autowired
 	TutorialRepository tutorialRepository;
@@ -36,7 +38,7 @@ public class UserController {
 		return userRepository.findAll();
 	}
 
-	// Get one tutorial by its id
+	// Get one user by its id
 	@GetMapping("/users/{id}")
 	public ResponseEntity<User> getUserById(@PathVariable("id") long id) {
 		Optional<User> optionalUser = userRepository.findById(id);
@@ -55,6 +57,16 @@ public class UserController {
 			throw new UserNotFoundException("id: " + id);
 		}
 		return userOptional.get().getTutorial();
+	}
+
+	// Find roles of an user
+	@GetMapping("/users/{id}/roles")
+	public Set<Role> findBySpecificRole(@PathVariable long id) {
+		Optional<User> userOptional = userRepository.findById(id);
+		if (!userOptional.isPresent()) {
+			throw new UserNotFoundException("id: " + id);
+		}
+		return userOptional.get().getRoles();
 	}
 
 	// Create a post for the specific user
