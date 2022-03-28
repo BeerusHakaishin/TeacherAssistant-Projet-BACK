@@ -24,7 +24,7 @@ import com.myTeachAssistant.site.model.Tutorial;
 import com.myTeachAssistant.site.repository.TutorialRepository;
 
 @CrossOrigin(origins = "*")
-// Initialy on localhost8081 but this causes problems with cors policy for the moment 
+// Initially on localhost8081 but this causes problems with CORS policy for the moment 
 @RestController
 @RequestMapping("/api")
 public class TutorialController {
@@ -88,7 +88,7 @@ public class TutorialController {
 		}
 	}
 
-	// Retrieve all comment off a tutorial
+	// Retrieve all comments off a tutorial
 	@GetMapping("/tutorials/{id}/comments")
 	public List<Comment> findBySpecificRole(@PathVariable long id) {
 		Optional<Tutorial> tutoOptional = tutorialRepository.findById(id);
@@ -149,5 +149,4 @@ public class TutorialController {
 //			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 //		}
 //	}
-
 }

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.myTeachAssistant.site.exception.UserNotFoundException;
+import com.myTeachAssistant.site.model.Comment;
 import com.myTeachAssistant.site.model.Role;
 import com.myTeachAssistant.site.model.Tutorial;
 import com.myTeachAssistant.site.model.User;
@@ -33,6 +36,7 @@ public class UserController {
 	@Autowired
 	TutorialRepository tutorialRepository;
 
+	// Get all users
 	@GetMapping("/users")
 	public List<User> getAll() {
 		return userRepository.findAll();
@@ -59,7 +63,7 @@ public class UserController {
 		return userOptional.get().getTutorial();
 	}
 
-	// Find roles of an user
+	// Get roles of an user
 	@GetMapping("/users/{id}/roles")
 	public Set<Role> findBySpecificRole(@PathVariable long id) {
 		Optional<User> userOptional = userRepository.findById(id);
@@ -67,6 +71,26 @@ public class UserController {
 			throw new UserNotFoundException("id: " + id);
 		}
 		return userOptional.get().getRoles();
+	}
+
+	// Get comments of an user
+	@GetMapping("/users/{id}/comments")
+	public List<Comment> findCommentByUser(@PathVariable long id) {
+		Optional<User> userOptional = userRepository.findById(id);
+		if (!userOptional.isPresent()) {
+			throw new UserNotFoundException("id: " + id);
+		}
+		return userOptional.get().getComment();
+	}
+
+	// method that posts a new user detail and returns the status of the user
+	// resource
+	@PostMapping("/users")
+	public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
+		User sevedUser = userRepository.save(user);
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(sevedUser.getId())
+				.toUri();
+		return ResponseEntity.created(location).build();
 	}
 
 	// Create a post for the specific user
