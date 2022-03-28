@@ -81,6 +81,8 @@ public class UserController {
 		return userOptional.get().getComment();
 	}
 
+	// Create an user
+
 	// Create a post for the specific user
 	@PostMapping("/users/{id}/tutorials")
 	public ResponseEntity<Object> createUser(@PathVariable long id, @RequestBody Tutorial tutorial) {
@@ -99,6 +101,8 @@ public class UserController {
 		// returns the location of the created post
 		return ResponseEntity.created(location).build();
 	}
+
+	// Update an user
 
 	// Delete an user
 	@DeleteMapping("/{id}")

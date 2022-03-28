@@ -60,21 +60,16 @@ public class User {
 
 	// No args Constructor
 	public User() {
-
 	}
 
 	// Args Constructor
 	public User(@NotBlank(message = "Le nom d'utilisateur est obligatoire") @Size(max = 50) @NotNull String username,
 			@NotBlank(message = "Le mail est obligatoire") @Size(max = 100) @Email @NotNull String email,
-			@NotBlank(message = "Le mot de passe est obligatoire") @Size(max = 120) @NotNull String password,
-			@NotNull Set<Role> roles, List<Tutorial> tutorial, List<Comment> comment) {
+			@NotBlank(message = "Le mot de passe est obligatoire") @Size(max = 120) @NotNull String password) {
 		super();
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.roles = roles;
-		this.tutorial = tutorial;
-		this.comment = comment;
 	}
 
 	// Getter && Setter

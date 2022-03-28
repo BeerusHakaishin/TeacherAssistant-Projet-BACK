@@ -49,6 +49,7 @@ public class Tutorial {
 
 	// Args Constructor
 	public Tutorial(String title, String description, Boolean published, Boolean favorite) {
+		super();
 		this.title = title;
 		this.description = description;
 		this.published = published;
